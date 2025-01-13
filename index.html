@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Herramienta de Etiquetado de Imágenes</title>
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body>
+		<h1>Herramienta de Etiquetado de Imágenes</h1>
+		<main>
+			<div id="controls">
+				<div>
+					<label for="upload">Subir Imagen:</label>
+					<input type="file" id="upload" accept="image/*" />
+				</div>
+				<div>
+					<label for="category">Nueva Categoría:</label>
+					<input type="text" id="category" placeholder="Nombre de la categoría" />
+					<input type="color" id="color" value="#000000" />
+					<button id="add-category">Agregar Categoría</button>
+				</div>
+				<div>
+					<label for="category-select">Seleccionar Categoría:</label>
+					<select id="category-select"></select>
+					<button id="delete-category">Eliminar Categoría Seleccionada</button>
+				</div>
+				<button id="export">Guardar Etiquetas</button>
+			</div>
+			<div class="canvas-container">
+				<canvas id="canvas"></canvas>
+			</div>
+		</main>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
+		<script src="script.js"></script>
+	</body>
+</html>
