@@ -18,6 +18,7 @@ let startX, startY;
 let rect;
 let isDrawing = false;
 let isModifying = false;
+let deleteButton = null; // Botón flotante para borrar cuadros
 
 upload.addEventListener('change', (e) => {
 	const file = e.target.files[0];
@@ -128,73 +129,149 @@ canvas.on('mouse:up', () => {
 	isModifying = false;
 });
 
-deleteCategory.addEventListener('click', () => {
-	const selectedCategory = categorySelect.value;
-	if (selectedCategory) {
-		const objects = canvas.getObjects('rect');
-		objects.forEach((obj) => {
-			if (obj.category === selectedCategory) {
-				canvas.remove(obj);
-			}
-		});
+// Crear y manejar el botón de eliminación
+canvas.on('selection:created', (event) => {
+	if (deleteButton) {
+		deleteButton.remove();
+		deleteButton = null;
+	}
 
-		delete categories[selectedCategory];
-		categorySelect.remove(categorySelect.selectedIndex);
-		canvas.renderAll();
+	const activeObject = canvas.getActiveObject();
+	if (activeObject) {
+		const rectCoords = activeObject.getBoundingRect();
+		createDeleteButton(rectCoords, activeObject);
 	}
 });
 
+// Remover el botón al deseleccionar
+canvas.on('selection:cleared', () => {
+	if (deleteButton) {
+		deleteButton.remove();
+		deleteButton = null;
+	}
+});
+
+// Manejar la eliminación con la tecla "Supr"
+document.addEventListener('keydown', (event) => {
+	if (event.key === 'Delete' || event.key === 'Backspace') {
+		const activeObject = canvas.getActiveObject();
+		if (activeObject) {
+			canvas.remove(activeObject); // Eliminar el objeto seleccionado
+			canvas.discardActiveObject(); // Deseleccionar cualquier objeto
+			canvas.renderAll(); // Renderizar el lienzo nuevamente
+		}
+	}
+});
+
+deleteCategory.addEventListener('click', () => {
+	// Obtener la categoría seleccionada
+	const selectedCategory = categorySelect.value;
+
+	// Verificar si hay una categoría seleccionada
+	if (selectedCategory) {
+		// Eliminar todos los rectángulos asociados a la categoría en el canvas
+		const objects = canvas.getObjects('rect');
+		objects.forEach((obj) => {
+			if (obj.category === selectedCategory) {
+				canvas.remove(obj); // Eliminar el rectángulo
+			}
+		});
+
+		// Eliminar la categoría del objeto `categories`
+		delete categories[selectedCategory];
+
+		// Eliminar la categoría del `select`
+		const optionToRemove = Array.from(categorySelect.options).find((option) => option.value === selectedCategory);
+		if (optionToRemove) {
+			categorySelect.removeChild(optionToRemove);
+		}
+
+		// Renderizar nuevamente el lienzo
+		canvas.renderAll();
+	} else {
+		alert('Por favor, selecciona una categoría para eliminar.');
+	}
+});
+
+canvas.on('selection:created', (event) => {
+	if (deleteButton) {
+		deleteButton.remove();
+		deleteButton = null;
+	}
+
+	const activeObject = canvas.getActiveObject();
+	if (activeObject) {
+		const rectCoords = activeObject.getBoundingRect();
+		createDeleteButton(rectCoords, activeObject);
+	}
+});
+
+canvas.on('selection:cleared', () => {
+	if (deleteButton) {
+		deleteButton.remove();
+		deleteButton = null;
+	}
+});
+
+// Exportar etiquetas
 exportBtn.addEventListener('click', () => {
 	if (!imageWidth || !imageHeight) {
 		alert('Cargue una imagen primero.');
 		return;
 	}
 
+	const format = document.getElementById('format-select').value;
 	const annotations = [];
 	const objects = canvas.getObjects('rect');
-	const categories_array = Object.keys(categories);
+	const categoriesArray = Object.keys(categories);
 
-	// Crear archivo de clases
-	const classesContent = categories_array.join('\n');
-	const classesBlob = new Blob([classesContent], { type: 'text/plain' });
-	const classesLink = document.createElement('a');
-	classesLink.href = URL.createObjectURL(classesBlob);
-	classesLink.download = 'classes.txt';
-	classesLink.click();
+	if (format === 'yolo') {
+		objects.forEach((obj) => {
+			if (obj.type === 'rect') {
+				const relativeX = (obj.left - canvas.getObjects()[0].left) / imageWidth;
+				const relativeY = (obj.top - canvas.getObjects()[0].top) / imageHeight;
+				const relativeWidth = obj.width / imageWidth;
+				const relativeHeight = obj.height / imageHeight;
+				const categoryIndex = categoriesArray.indexOf(obj.category);
 
-	// Obtener imagen y factores de escala
-	const img = canvas.getObjects()[0];
-	const imgLeft = img.left;
-	const imgTop = img.top;
-	const scaleFactor = img.scaleX;
+				annotations.push(`${categoryIndex} ${relativeX.toFixed(6)} ${relativeY.toFixed(6)} ${relativeWidth.toFixed(6)} ${relativeHeight.toFixed(6)}`);
+			}
+		});
+	}
 
-	objects.forEach((obj) => {
-		if (obj.type === 'rect') {
-			// Convertir a coordenadas relativas
-			const relativeX = (obj.left - imgLeft) / (img.width * scaleFactor);
-			const relativeY = (obj.top - imgTop) / (img.height * scaleFactor);
-			const relativeWidth = (obj.width * obj.scaleX) / (img.width * scaleFactor);
-			const relativeHeight = (obj.height * obj.scaleY) / (img.height * scaleFactor);
+	if (format === 'coco') {
+		const cocoAnnotations = objects.map((obj, index) => ({
+			id: index + 1,
+			category_id: categoriesArray.indexOf(obj.category),
+			bbox: [obj.left, obj.top, obj.width * obj.scaleX, obj.height * obj.scaleY],
+		}));
+		annotations.push(JSON.stringify({ annotations: cocoAnnotations, categories: categoriesArray }));
+	}
 
-			// Calcular centro
-			const x_center = relativeX + relativeWidth / 2;
-			const y_center = relativeY + relativeHeight / 2;
+	if (format === 'pascal') {
+		annotations.push(
+			objects
+				.map(
+					(obj) => `
+					<object>
+						<name>${obj.category}</name>
+						<bndbox>
+							<xmin>${obj.left}</xmin>
+							<ymin>${obj.top}</ymin>
+							<xmax>${obj.left + obj.width}</xmax>
+							<ymax>${obj.top + obj.height}</ymax>
+						</bndbox>
+					</object>
+				`
+				)
+				.join('\n')
+		);
+	}
 
-			const category_index = categories_array.indexOf(obj.category);
-
-			// Normalizar valores
-			const normalizedX = Math.max(0, Math.min(1, x_center));
-			const normalizedY = Math.max(0, Math.min(1, y_center));
-			const normalizedWidth = Math.max(0, Math.min(1, relativeWidth));
-			const normalizedHeight = Math.max(0, Math.min(1, relativeHeight));
-
-			annotations.push(`${category_index} ${normalizedX.toFixed(6)} ${normalizedY.toFixed(6)} ${normalizedWidth.toFixed(6)} ${normalizedHeight.toFixed(6)}`);
-		}
-	});
-
-	const labelsBlob = new Blob([annotations.join('\n')], { type: 'text/plain' });
-	const labelsLink = document.createElement('a');
-	labelsLink.href = URL.createObjectURL(labelsBlob);
-	labelsLink.download = 'labels.txt';
-	labelsLink.click();
+	// Descargar archivo
+	const blob = new Blob([annotations.join('\n')], { type: 'text/plain' });
+	const link = document.createElement('a');
+	link.href = URL.createObjectURL(blob);
+	link.download = `annotations.${format === 'coco' ? 'json' : 'txt'}`;
+	link.click();
 });

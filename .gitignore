@@ -1,0 +1,15 @@
+# Ignorar directorios
+node_modules/
+dist/
+
+# Ignorar archivos específicos
+.env
+config.json
+
+# Ignorar todos los archivos con una extensión
+*.log
+*.tmp
+
+# Ignorar archivos o carpetas en subdirectorios
+secret_folder/*
+data/*.csv

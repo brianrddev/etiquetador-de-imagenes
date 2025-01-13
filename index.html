@@ -4,31 +4,92 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Herramienta de Etiquetado de Imágenes</title>
-		<link rel="stylesheet" href="styles.css" />
+		<link rel="stylesheet" href="./dist/tailwind.css" />
 	</head>
-	<body>
-		<h1>Herramienta de Etiquetado de Imágenes</h1>
-		<main>
-			<div id="controls">
-				<div>
-					<label for="upload">Subir Imagen:</label>
-					<input type="file" id="upload" accept="image/*" />
+	<body class="bg-gray-900 text-gray-200 font-sans min-h-screen p-6">
+		<h1 class="text-center text-3xl font-bold mb-8 text-white">Herramienta de Etiquetado de Imágenes</h1>
+		<main class="flex flex-col lg:flex-row gap-6 items-start max-w-7xl mx-auto">
+			<div id="controls" class="flex flex-col gap-4 bg-gray-800 p-6 rounded-lg shadow-lg w-full lg:w-1/3">
+				<div class="flex flex-col gap-2">
+					<label for="upload" class="text-sm font-medium text-gray-300">Subir Imagen:</label>
+					<input
+						type="file"
+						id="upload"
+						accept="image/*"
+						class="border border-gray-700 bg-gray-900 rounded px-3 py-2 text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+					/>
 				</div>
-				<div>
-					<label for="category">Nueva Categoría:</label>
-					<input type="text" id="category" placeholder="Nombre de la categoría" />
-					<input type="color" id="color" value="#000000" />
-					<button id="add-category">Agregar Categoría</button>
+				<div class="flex flex-col gap-2">
+					<label for="category" class="text-sm font-medium text-gray-300">Nueva Categoría:</label>
+					<div class="grid grid-cols-6 place-items-center gap-2">
+						<input
+							type="text"
+							id="category"
+							placeholder="Nombre de la categoría"
+							class="border w-full col-span-3 border-gray-700 bg-gray-900 rounded px-3 py-2 text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+						/>
+						<input type="color" id="color" value="#000000" class="w-full col-span-2 h-10 border border-gray-700 rounded overflow-hidden cursor-pointer" />
+						<button id="add-category" class="bg-indigo-600 hover:bg-indigo-500 text-indigo-50 rounded px-4 py-2 font-semibold transition">
+							<span
+								><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+									<path
+										fill-rule="evenodd"
+										d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
+										clip-rule="evenodd"
+									/>
+								</svg>
+							</span>
+						</button>
+					</div>
 				</div>
-				<div>
-					<label for="category-select">Seleccionar Categoría:</label>
-					<select id="category-select"></select>
-					<button id="delete-category">Eliminar Categoría Seleccionada</button>
+				<div class="flex gap-2">
+					<select
+						id="category-select"
+						name="category-select"
+						class="w-full border border-gray-700 bg-gray-900 rounded px-3 py-2 text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none"
+					></select>
+					<button id="delete-category" class="bg-red-500 hover:bg-red-500 text-red-50 rounded px-4 py-2 font-semibold transition">
+						<span>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+								<path
+									fill-rule="evenodd"
+									d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+						</span>
+					</button>
 				</div>
-				<button id="export">Guardar Etiquetas</button>
+				<div class="flex items-center gap-4">
+					<!-- Selector de formato -->
+					<div class="flex items-center">
+						<label for="format-select" class="mr-2 text-sm text-gray-200">Formato:</label>
+						<select id="format-select" class="border border-gray-700 bg-gray-900 text-gray-200 rounded px-2 py-1 focus:ring-2 focus:ring-green-500 focus:outline-none">
+							<option value="yolo">YOLO</option>
+							<option value="coco">COCO</option>
+							<option value="pascal">Pascal VOC</option>
+						</select>
+					</div>
+
+					<!-- Botón de exportar -->
+					<button id="export" class="flex w-fit gap-2 items-center bg-green-600 hover:bg-green-500 text-green-50 rounded px-4 py-2 font-semibold transition">
+						<span>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+								<path
+									fill-rule="evenodd"
+									d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
+									clip-rule="evenodd"
+								/>
+							</svg>
+						</span>
+						Exportar
+					</button>
+				</div>
 			</div>
-			<div class="canvas-container">
-				<canvas id="canvas"></canvas>
+			<div
+				class="canvas-container w-[400px] h-[700px] flex items-center justify-center flex-1 bg-gray-800 border border-gray-700 rounded-lg overflow-hidden shadow-lg relative"
+			>
+				<canvas id="canvas" class="flex items-center justify-center w-full h-full"></canvas>
 			</div>
 		</main>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
