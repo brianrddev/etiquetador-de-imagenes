@@ -4,93 +4,62 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Herramienta de Etiquetado de Imágenes</title>
-		<link rel="stylesheet" href="./dist/tailwind.css" />
+		<link rel="stylesheet" href="app.css" />
 		<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
 	</head>
-	<body class="bglinear-gradient text-stone-100 font-sans min-h-screen p-6">
-		<main class="grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-6 items-start max-w-8xl mx-auto">
+	<body class="app-body">
+		<main class="app-main">
 			<!-- Panel lateral -->
-			<div id="controls" class="flex flex-col gap-8 p-6 rounded-sm text-stone-900">
-				<div class="flex flex-col gap-2">
-					<input type="file" id="upload" accept="image/*" class="w-[200px] h-[50px] bg-stone-900 rounded px-3 py-2 text-stone-100 font-semibold focus:outline-none" />
+			<div id="controls">
+				<!-- Subir imagen -->
+				<div class="upload-container">
+					<input type="file" id="upload" accept="image/*" />
 				</div>
-				<div class="flex flex-col gap-2 bg-stone-300 rounded px-3 py-2">
-					<div class="flex justify-between place-items-center gap-2">
-						<input
-							type="text"
-							id="category"
-							placeholder="Nombre de la categoría"
-							class="w-full pr-3 py-2 focus:outline-none border-b-2 border-stone-900 bg-transparent text-stone-900 font-semibold min-w-56"
-						/>
-						<input type="color" id="color" value="#000000" class="w-full h-10 border border-stone-900 rounded overflow-hidden cursor-pointer" />
-						<button id="add-category" class="bg-stone-900 hover:bg-stone-800 text-stone-100 rounded px-4 py-2 font-semibold transition-all duration-300 ease-in-out">
-							<span>
-								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-									<path
-										fill-rule="evenodd"
-										d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</span>
-						</button>
-					</div>
-				</div>
-				<div class="flex gap-2">
-					<select
-						id="category-select"
-						name="category-select"
-						class="w-full bg-stone-900 rounded px-3 py-2 text-stone-100 font-medium focus:outline-none max-w-64"
-					></select>
-					<button id="delete-category" class="bg-rose-500 hover:bg-rose-600 text-red-50 rounded px-4 py-2 font-semibold transition-all duration-300 ease-in-out ml-auto">
-						<span>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+				<!-- Agregar categoría -->
+				<div class="category-container">
+					<div class="category-input-wrapper">
+						<input type="text" id="category" placeholder="Nombre de la categoría" />
+						<input type="color" id="color" value="#000000" />
+						<button id="add-category">
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
 								<path
 									fill-rule="evenodd"
-									d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+									d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
 									clip-rule="evenodd"
 								/>
 							</svg>
-						</span>
+						</button>
+					</div>
+				</div>
+				<!-- Seleccionar/eliminar categoría -->
+				<div class="select-container">
+					<select id="category-select" name="category-select"></select>
+					<button id="delete-category">
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+							<path
+								fill-rule="evenodd"
+								d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+								clip-rule="evenodd"
+							/>
+						</svg>
 					</button>
 				</div>
-				<div class="flex items-center gap-4">
-					<select id="format-select" class="bg-stone-900 text-stone-100 rounded w-full max-w-64 px-3 py-2 font-medium focus:outline-none">
+				<!-- Formato y exportación -->
+				<div class="export-container">
+					<select id="format-select">
 						<option value="yolo">YOLO</option>
 						<option value="coco">COCO</option>
 						<option value="pascal">Pascal VOC</option>
 					</select>
-					<button
-						id="export"
-						class="flex w-fit gap-2 items-center bg-teal-600 hover:bg-teal-700 text-stone-100 rounded px-3 py-2 font-semibold transition-all duration-300 ease-in-out ml-auto"
-					>
-						<span>
-							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-								<path
-									fill-rule="evenodd"
-									d="M12 2.25a.75.75 0 0 1 .75.75v11.69l3.22-3.22a.75.75 0 1 1 1.06 1.06l-4.5 4.5a.75.75 0 0 1-1.06 0l-4.5-4.5a.75.75 0 1 1 1.06-1.06l3.22 3.22V3a.75.75 0 0 1 .75-.75Zm-9 13.5a.75.75 0 0 1 .75.75v2.25a1.5 1.5 0 0 0 1.5 1.5h13.5a1.5 1.5 0 0 0 1.5-1.5V16.5a.75.75 0 0 1 1.5 0v2.25a3 3 0 0 1-3 3H5.25a3 3 0 0 1-3-3V16.5a.75.75 0 0 1 .75-.75Z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-						</span>
-						Exportar
-					</button>
+					<button id="export">Exportar</button>
 				</div>
 			</div>
-
 			<!-- Canvas -->
-			<div class="canvas-container flex items-center justify-center rounded-sm overflow-hidden shadow-lg relative">
-				<canvas id="canvas" class="w-full h-[500px] lg:h-[700px]"></canvas>
+			<div class="canvas-container">
+				<canvas id="canvas"></canvas>
 			</div>
 		</main>
-
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.4/fabric.min.js"></script>
 		<script src="script.js"></script>
 	</body>
 </html>
-
-<style>
-	.bglinear-gradient {
-		background: linear-gradient(130deg, #ffffff 50%, #ffe6f2 70%, #ffb9dd 80%, #ff8fa5 88%, #ff7b6d 93%, #ef6f1d 100%);
-	}
-</style>

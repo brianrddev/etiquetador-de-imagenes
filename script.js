@@ -1,7 +1,7 @@
 const canvas = new fabric.Canvas('canvas', {
-	width: window.innerWidth * 0.7, // Más responsive
-	height: window.innerHeight * 0.7,
-	selection: false, // Previene selección múltiple no deseada
+	width: Math.min(window.innerWidth * 0.7, 1000), // Máximo 1000px de ancho
+	height: Math.min(window.innerHeight * 0.7, 700), // Máximo 700px de alto
+	selection: false,
 });
 
 // Ajustar canvas al redimensionar ventana
